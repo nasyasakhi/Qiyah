@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Qiyah.App</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+    />
+  </head>
+  <body>
+    <header class="header">
+      <a href="#" class="namamu"
+        >Qiyah<i class="bx bx-menu" id="menu-icon"></i
+      ></a>
+      <img class="logo" src="images/baca quran.png" alt="logo" />
+
+      <nav class="navbar">
+        <a href="index.html" class="active">Home</a>
+        <a href="jadwal.html">Jadwal Sholat</a>
+        <a href="asmaul-husna.html">Asmaul Husna</a>
+        <a href="list-surah.html">List Surah</a>
+      </nav>
+    </header>
+
+    <h2 class="judul">LIST SURAH</h2>
+    <div id="result"></div>
+
+    <script>
+      window.onload = function () {
+        getData();
+      };
+      function getData() {
+        fetch("https://api.banghasan.com/quran/format/json/surat")
+          .then(function (respon) {
+            if (!respon.ok) {
+              throw new Error("Gagal Mengambil Data");
+            }
+            return respon.json();
+          })
+          .then(function (data) {
+            displayData(data);
+          })
+          .catch(function (error) {
+            console.log("terjadi kesalahan", error);
+          });
+      }
+
+      function displayData(data) {
+        var resultDiv = document.getElementById("result");
+        resultDiv.innerHTML = "";
+
+        data.hasil.forEach(function (surat) {
+          var suratDiv = document.createElement("div");
+          suratDiv.className = "container";
+          suratDiv.classList.add("surah");
+
+          var namaSurat = document.createElement("h2");
+          namaSurat.className = "nama";
+          namaSurat.textContent = surat.nama;
+
+          var asmaSurat = document.createElement("p");
+          asmaSurat.textContent = surat.asma;
+
+          var ayatSurat = document.createElement("p");
+          ayatSurat.className = "ayat";
+          ayatSurat.textContent = "Jumlah Ayat : " + surat.ayat;
+
+          var artiSurat = document.createElement("p");
+          artiSurat.className = "ayat";
+          artiSurat.textContent = surat.arti;
+
+          var typeSurat = document.createElement("p");
+          typeSurat.className = "ayat";
+          typeSurat.textContent = "Klasifikasi : " + surat.type;
+
+          suratDiv.appendChild(asmaSurat);
+          suratDiv.appendChild(namaSurat);
+          suratDiv.appendChild(typeSurat);
+          suratDiv.appendChild(ayatSurat);
+          suratDiv.appendChild(artiSurat);
+
+          resultDiv.appendChild(suratDiv);
+        });
+      }
+    </script>
+
+    <script src="script.js"></script>
+  </body>
+</html>
